@@ -102,6 +102,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-# Dont store DB Credentials in repo
-credentials.js
