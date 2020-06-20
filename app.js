@@ -6,21 +6,19 @@ var logger = require('morgan');
 
 let credentials = require('./credentials');//store mongodb credentials in separate, non-tracked file
 var db_admin = credentials.getCredentials();
-console.log(db_admin);
 
-//monk will be our db connection tool
+//now using monk to handle MongoDB
 var monk = require('monk');
-//connection to Atlas
 var uri = "mongodb+srv://" + db_admin.username + ":" + db_admin.password + "@cluster0-i3nnd.gcp.mongodb.net/test_db?retryWrites=true&w=majority";
+// Connect to the db
 var db = monk(uri);
 
-db.then(()=>{
-  console.log('Connected to server');
+db.then(() => {
+  console.log('Connected correctly to server');
 });
 
-
-
 const collection = db.get('test_collection');
+
 collection.find({}, function(err, docs){
     if(err){
       console.log(err);
@@ -29,20 +27,19 @@ collection.find({}, function(err, docs){
     }
 });
 
-
+/*
+collection.insert([{a: 1}, {a: 2}, {a: 3}])
+  .then((docs) => {
+    // Inserted 3 documents into the document collection
+	console.log(docs);
+  })
+  */
 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-
-app.get('/collections/:name',function(req,res){
-  var collection = db.get(req.params.name);
-  collection.find({},{limit:20},function(e,docs){
-    res.json(docs);
-  })
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,6 +59,13 @@ app.use(function(req,res,next){
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.get('/collections/:name',function(req,res){
+  var collection = db.get(req.params.name);
+  collection.find({},{limit:20},function(e,docs){
+    res.json(docs);
+  })
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
