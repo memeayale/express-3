@@ -11,7 +11,7 @@ console.log(db_admin);
 //monk will be our db connection tool
 var monk = require('monk');
 //connection to Atlas
-var uri = "mongodb+srv://" + db_admin.username + ":" + db_admin.password + "@cluster0-i3nnd.gcp.mongodb.net/test_db?retryWrites=true&w=majority";
+var uri = "mongodb+srv://" + db_admin.username + ":" + db_admin.password + "@cluster0-i3nnd.gcp.mongodb.net/test?retryWrites=true&w=majority";
 var db = monk(uri);
 
 db.then(()=>{
